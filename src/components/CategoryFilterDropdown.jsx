@@ -7,7 +7,7 @@ function CategoryFilterDropdown({ category, setCategory }) {
   const categories = [
     "All Categories", "Food", "Transportation", "Shopping", "Bills",
     "Entertainment", "Education", "Health", "Allowance", "Salary",
-    "Gift", "Other",
+    "Gift", "Other Expense", "Other Income"
   ];
 
   return (

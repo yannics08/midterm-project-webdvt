@@ -2,14 +2,23 @@ import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import CategoryDonutChart from "./CategoryDonutChart";
 
-const DONUT_COLORS = [
-  "#7e22ce", // purple-700
-  "#2563eb", // blue-600
-  "#db2777", // pink-600
-  "#059669", // emerald-600
-  "#d97706", // amber-600
-  "#6b7280", // gray-500
-];
+const CATEGORY_COLORS = {
+  Food: "#f97316", // orange-500
+  Transportation: "#3b82f6", // blue-500
+  Shopping: "#ec4899", // pink-500
+  Bills: "#f59e0b", // amber-500
+  Entertainment: "#a855f7", // purple-500
+  Education: "#6366f1", // indigo-500
+  Health: "#ef4444", // red-500
+  Allowance: "#14b8a6", // teal-500
+  Salary: "#22c55e", // green-500
+  Gift: "#d946ef", // fuchsia-500
+  "Other Expense": "#6b7280", // gray-500
+  "Other Income": "#6b7280", // gray-500
+  Other: "#6b7280", // gray-500
+};
+
+const DEFAULT_COLOR = "#9ca3af"; // gray-400 fallback
 
 function CategoryMiniBreakdown({ transactions = [], topN = 4 }) {
   const { segments, hasData } = useMemo(() => {
@@ -35,10 +44,10 @@ function CategoryMiniBreakdown({ transactions = [], topN = 4 }) {
       grouped.push({ category: "Other", amount: otherAmount });
     }
 
-    const segments = grouped.map((cat, i) => ({
+    const segments = grouped.map((cat) => ({
       ...cat,
       percentage: total > 0 ? (cat.amount / total) * 100 : 0,
-      color: DONUT_COLORS[i % DONUT_COLORS.length],
+      color: CATEGORY_COLORS[cat.category] || DEFAULT_COLOR,
     }));
 
     return { segments, hasData: total > 0 };

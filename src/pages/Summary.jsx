@@ -11,10 +11,23 @@ import {
   getPeriodRanges,
 } from "../utils/dateRanges";
 
-const PIE_COLORS = [
-  "#7e22ce", "#2563eb", "#db2777", "#059669", "#d97706",
-  "#dc2626", "#0891b2", "#4f46e5", "#65a30d", "#c026d3", "#6b7280",
-];
+const CATEGORY_COLORS = {
+  Food: "#f97316", // orange-500
+  Transportation: "#3b82f6", // blue-500
+  Shopping: "#ec4899", // pink-500
+  Bills: "#f59e0b", // amber-500
+  Entertainment: "#a855f7", // purple-500
+  Education: "#6366f1", // indigo-500
+  Health: "#ef4444", // red-500
+  Allowance: "#14b8a6", // teal-500
+  Salary: "#22c55e", // green-500
+  Gift: "#d946ef", // fuchsia-500
+  "Other Expense": "#6b7280", // gray-500
+  "Other Income": "#6b7280", // gray-500
+  Other: "#6b7280", // gray-500
+};
+
+const DEFAULT_COLOR = "#9ca3af";
 
 function Summary() {
   const { transactions } = useTransactions();
@@ -79,9 +92,9 @@ function Summary() {
   const totalCategories = categoriesArray.length;
   const hasAnySpending = totalSpending > 0;
 
-  const categoriesWithColor = categoriesArray.map((cat, i) => ({
+  const categoriesWithColor = categoriesArray.map((cat) => ({
     ...cat,
-    color: PIE_COLORS[i % PIE_COLORS.length],
+    color: CATEGORY_COLORS[cat.category] || DEFAULT_COLOR,
   }));
 
   const transactionsByCategory = {};
@@ -130,11 +143,11 @@ function Summary() {
             Total Spending
           </h3>
           <div className="flex items-end justify-between flex-wrap gap-2">
-            <p className="text-3xl font-bold">${totalSpending.toFixed(2)}</p>
+            <p className="text-3xl font-bold">₱{totalSpending.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
             <TrendBadge current={totalSpending} previous={previousTotalSpending} />
           </div>
           <p className="text-xs text-gray-400 mt-1 transition-colors">
-            vs ${previousTotalSpending.toFixed(2)} in {previous.label}
+            vs ₱{previousTotalSpending.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} in {previous.label}
           </p>
         </div>
 
@@ -149,10 +162,10 @@ function Summary() {
             </p>
             {highestCategory !== "None" ? (
               <p className="text-sm text-purple-600 dark:text-purple-400 mt-1 transition-colors">
-                ${highestAmount.toFixed(2)}
+                ₱{highestAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </p>
             ) : (
-              <p className="text-sm text-gray-400 dark:text-gray-500 mt-1 transition-colors">$0.00</p>
+              <p className="text-sm text-gray-400 dark:text-gray-500 mt-1 transition-colors">₱0.00</p>
             )}
           </div>
           <div className="bg-blue-50 dark:bg-blue-500/10 rounded-xl p-5 border border-blue-100 dark:border-blue-500/20 transition-colors">
