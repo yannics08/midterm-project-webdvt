@@ -1,14 +1,12 @@
-import { Link } from "react-router-dom";
 import { useTransactions } from "../context/TransactionContext";
-import Balance from "../components/Balance";
-import IncomeExpense from "../components/IncomeExpense";
+import FinancialOverview from "../components/FinancialOverview";
 import CategoryMiniBreakdown from "../components/CategoryMiniBreakdown";
 import TransactionList from "../components/TransactionList";
 
 function Dashboard() {
   const { transactions } = useTransactions();
 
-  // 1. Filter transactions to only include the current month
+  // Filter transactions to only include the current month
   const currentMonthTransactions = transactions.filter((t) => {
     const transactionDate = new Date(t.date);
     const now = new Date();
@@ -35,22 +33,18 @@ function Dashboard() {
         {/* Top Section: 50/50 Split */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
           
-          {/* Left Column (50%): Balance & Income/Expense */}
-          <div className="flex flex-col gap-6 w-full">
-            <Balance />
-            <IncomeExpense />
+          {/* Left Column (50%): Combined Financial Overview */}
+          <div className="flex flex-col w-full">
+            <FinancialOverview />
           </div>
 
           {/* Right Column (50%): Category Breakdown */}
-          <div className="w-full bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-800 transition-colors flex flex-col h-full">
-            
-            {/* 2. Pass the filtered array here instead of all transactions */}
+          <div className="w-full bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-3xl p-6 md:p-8 shadow-lg shadow-purple-500/5 border border-purple-500/20 dark:border-purple-500/10 transition-colors flex flex-col h-full">
             <CategoryMiniBreakdown
               transactions={currentMonthTransactions}
               topN={5}
               size={160}
             />
-
           </div>
         </div>
 
