@@ -48,7 +48,7 @@ function CategoryBreakdownList({ categories, transactionsByCategory }) {
                     {cat.percentage.toFixed(1)}%
                   </span>
                   <span className="font-semibold text-gray-900 dark:text-white min-w-[70px] text-right transition-colors">
-                    ${cat.amount.toFixed(2)}
+                    ₱{cat.amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </span>
                   <span
                     className={`text-gray-400 dark:text-gray-500 transition-transform ${
