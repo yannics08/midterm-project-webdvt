@@ -110,7 +110,7 @@ function Summary() {
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-950 p-6 flex flex-col items-center transition-colors">
-      <div className="w-full max-w-3xl bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-sm border border-gray-200 dark:border-gray-800 space-y-8 transition-colors">
+      <div className="w-full max-w-3xl bg-white dark:bg-gray-900 rounded-3xl p-8 shadow-sm border border-gray-200 dark:border-gray-800 space-y-8 transition-colors">
         <div>
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white transition-colors">Summary</h2>
@@ -137,23 +137,31 @@ function Summary() {
           />
         </div>
 
-        {/* Headline: Total Spending */}
-        <div className="bg-gray-900 dark:bg-gray-800 rounded-xl p-6 text-white transition-colors shadow-sm">
-          <h3 className="text-sm font-medium text-gray-300 dark:text-gray-400 mb-1 transition-colors">
-            Total Spending
-          </h3>
-          <div className="flex items-end justify-between flex-wrap gap-2">
-            <p className="text-3xl font-bold">₱{totalSpending.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
-            <TrendBadge current={totalSpending} previous={previousTotalSpending} />
+        {/* Headline: Total Spending (Purple Glassmorphism matching FinancialOverview) */}
+        <div className="relative overflow-hidden bg-gradient-to-br from-purple-900/95 via-purple-800/85 to-purple-950/98 dark:from-purple-950/95 dark:via-purple-900/85 dark:to-black/98 backdrop-blur-2xl rounded-3xl p-6 md:p-8 shadow-xl shadow-purple-900/20 border border-purple-500/30 text-white w-full transition-all duration-300">
+          {/* Glow Effects */}
+          <div className="absolute -right-10 -top-10 w-40 h-40 bg-purple-500/25 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -left-10 -bottom-10 w-40 h-40 bg-indigo-500/25 rounded-full blur-3xl pointer-events-none" />
+
+          <div className="relative z-10">
+            <h3 className="text-xs sm:text-sm font-semibold text-purple-200/80 uppercase tracking-widest mb-2 transition-colors">
+              Total Spending
+            </h3>
+            <div className="flex items-end justify-between flex-wrap gap-2">
+              <p className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight">
+                ₱{totalSpending.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+              </p>
+              <TrendBadge current={totalSpending} previous={previousTotalSpending} />
+            </div>
+            <p className="text-xs font-medium text-purple-300/70 mt-3 transition-colors">
+              vs ₱{previousTotalSpending.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} in {previous.label}
+            </p>
           </div>
-          <p className="text-xs text-gray-400 mt-1 transition-colors">
-            vs ₱{previousTotalSpending.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} in {previous.label}
-          </p>
         </div>
 
         {/* 2 Horizontal Layout Cards */}
         <div className="grid grid-cols-2 gap-4">
-          <div className="bg-purple-50 dark:bg-purple-500/10 rounded-xl p-5 border border-purple-100 dark:border-purple-500/20 transition-colors">
+          <div className="bg-purple-50 dark:bg-purple-500/10 rounded-2xl p-5 border border-purple-100 dark:border-purple-500/20 transition-colors">
             <h3 className="text-sm font-medium text-purple-800 dark:text-purple-300 mb-1 transition-colors">
               Highest Spending Category
             </h3>
@@ -161,21 +169,21 @@ function Summary() {
               {highestCategory}
             </p>
             {highestCategory !== "None" ? (
-              <p className="text-sm text-purple-600 dark:text-purple-400 mt-1 transition-colors">
+              <p className="text-sm text-purple-600 dark:text-purple-400 mt-1 transition-colors font-medium">
                 ₱{highestAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </p>
             ) : (
-              <p className="text-sm text-gray-400 dark:text-gray-500 mt-1 transition-colors">₱0.00</p>
+              <p className="text-sm text-gray-400 dark:text-gray-500 mt-1 transition-colors font-medium">₱0.00</p>
             )}
           </div>
-          <div className="bg-blue-50 dark:bg-blue-500/10 rounded-xl p-5 border border-blue-100 dark:border-blue-500/20 transition-colors">
+          <div className="bg-blue-50 dark:bg-blue-500/10 rounded-2xl p-5 border border-blue-100 dark:border-blue-500/20 transition-colors">
             <h3 className="text-sm font-medium text-blue-800 dark:text-blue-300 mb-1 transition-colors">
               Total Categories
             </h3>
             <p className="text-2xl font-bold text-gray-900 dark:text-white transition-colors">
               {totalCategories}
             </p>
-            <p className="text-sm text-blue-600 dark:text-blue-400 mt-1 transition-colors">
+            <p className="text-sm text-blue-600 dark:text-blue-400 mt-1 transition-colors font-medium">
               Categories with expenses
             </p>
           </div>
