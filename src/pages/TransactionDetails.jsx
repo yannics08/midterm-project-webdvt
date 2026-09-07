@@ -9,7 +9,6 @@ import {
 } from "lucide-react";
 
 import CategoryDropdown from "../components/CategoryDropdown";
-import TypeDropdown from "../components/TypeDropdown";
 
 function TransactionDetails() {
   const { id } = useParams();
@@ -79,16 +78,22 @@ function TransactionDetails() {
   };
 
   const handleSave = () => {
+    if (!name.trim()) {
+      alert("Please enter a transaction name.");
+      return;
+    }
     if (!category) {
       alert("Please select a category.");
       return;
     }
-
     if (!type) {
       alert("Please select a transaction type.");
       return;
     }
-
+    if (!amount || Number(amount) <= 0) {
+      alert("Please enter a valid amount.");
+      return;
+    }
     if (!date) {
       alert("Please select a date.");
       return;
@@ -134,53 +139,40 @@ function TransactionDetails() {
       </div>
 
       {/* Details Card */}
-      <div className="w-full max-w-2xl bg-white dark:bg-gray-900 rounded-3xl p-8 shadow-sm border border-gray-200 dark:border-gray-800 transition-colors">
-
-        {/* Header */}
-        <div className="border-b border-gray-200 dark:border-gray-800 pb-6 transition-colors">
-          <p className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2 transition-colors">
-            Transaction Details
-          </p>
-
-          {!isEditing ? (
-            <div className="flex items-center justify-between gap-4">
-              <h1 className="text-2xl font-bold text-gray-900 dark:text-white transition-colors">
-                {transaction.name}
-              </h1>
-
-              <p
-                className={`text-2xl font-bold ${
-                  transaction.type === "income"
-                    ? "text-green-600 dark:text-green-400"
-                    : "text-red-600 dark:text-red-400"
-                } transition-colors`}
-              >
-                {transaction.type === "income" ? "+" : "-"}₱
-                {Number(transaction.amount).toLocaleString(undefined, {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                })}
-              </p>
-            </div>
-          ) : (
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors">
-                Transaction Name
-              </label>
-              <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="w-full rounded-2xl border border-gray-300 dark:border-gray-700 px-4 py-3.5 outline-none focus:ring-2 focus:ring-purple-600 dark:focus:ring-purple-500 focus:border-transparent text-gray-900 dark:text-white bg-transparent transition-colors"
-                required
-              />
-            </div>
-          )}
-        </div>
+      <div className={`w-full max-w-2xl bg-white dark:bg-gray-900 rounded-3xl p-8 border dark:border-gray-800 transition-colors ${
+          isEditing ? "shadow-xl shadow-gray-200/50 dark:shadow-black/20 border-gray-200/80" : "shadow-sm border-gray-200"
+      }`}>
 
         {/* VIEW MODE */}
         {!isEditing ? (
           <>
+            {/* View Header */}
+            <div className="border-b border-gray-200 dark:border-gray-800 pb-6 transition-colors">
+              <p className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2 transition-colors">
+                Transaction Details
+              </p>
+
+              <div className="flex items-center justify-between gap-4">
+                <h1 className="text-2xl font-bold text-gray-900 dark:text-white transition-colors">
+                  {transaction.name}
+                </h1>
+
+                <p
+                  className={`text-2xl font-bold ${
+                    transaction.type === "income"
+                      ? "text-green-600 dark:text-green-400"
+                      : "text-red-600 dark:text-red-400"
+                  } transition-colors`}
+                >
+                  {transaction.type === "income" ? "+" : "-"}₱
+                  {Number(transaction.amount).toLocaleString(undefined, {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
+                </p>
+              </div>
+            </div>
+
             {/* Transaction Information */}
             <div className="py-6 space-y-5">
               {/* Category */}
@@ -258,36 +250,88 @@ function TransactionDetails() {
         ) : (
           <>
             {/* EDIT MODE */}
-            <div className="py-6 space-y-5">
-              {/* Category + Type */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <CategoryDropdown
-                  type={type}
-                  category={category}
-                  setCategory={setCategory}
-                />
-                <TypeDropdown
-                  type={type}
-                  setType={(newType) => {
-                    setType(newType);
-                    setCategory(""); // Reset category on type change
+            
+            {/* Edit Header */}
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white transition-colors">
+                Edit Transaction
+              </h2>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 transition-colors">
+                Update your transaction details.
+              </p>
+            </div>
+
+            <div className="space-y-6">
+              {/* Income / Expense Toggle Slider (Moved above Name) */}
+              <div className="flex bg-gray-100 dark:bg-gray-800 p-1.5 rounded-2xl relative transition-colors">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setType("expense");
+                    setCategory("");
                   }}
+                  className={`flex-1 py-3 text-sm font-bold rounded-xl transition-all duration-300 relative z-10 ${
+                    type === "expense"
+                      ? "text-red-600 dark:text-red-400 shadow-sm bg-white dark:bg-gray-900"
+                      : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+                  }`}
+                >
+                  Expense
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setType("income");
+                    setCategory("");
+                  }}
+                  className={`flex-1 py-3 text-sm font-bold rounded-xl transition-all duration-300 relative z-10 ${
+                    type === "income"
+                      ? "text-green-600 dark:text-green-400 shadow-sm bg-white dark:bg-gray-900"
+                      : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+                  }`}
+                >
+                  Income
+                </button>
+              </div>
+
+              {/* Transaction Name (Moved below Toggle) */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors">
+                  Transaction Name
+                </label>
+                <input
+                  type="text"
+                  value={name}
+                  placeholder="e.g. Groceries"
+                  onChange={(e) => setName(e.target.value)}
+                  className="w-full rounded-2xl border border-gray-300 dark:border-gray-700 px-4 py-3.5 outline-none focus:ring-2 focus:ring-purple-600 dark:focus:ring-purple-500 focus:border-transparent text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 bg-transparent transition-colors"
+                  required
                 />
               </div>
 
-              {/* Amount + Date */}
+              {/* Amount */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors">
+                  Amount
+                </label>
+                <input
+                  type="number"
+                  value={amount}
+                  placeholder="0.00"
+                  onChange={(e) => setAmount(e.target.value)}
+                  className="w-full rounded-2xl border border-gray-300 dark:border-gray-700 px-4 py-3.5 outline-none focus:ring-2 focus:ring-purple-600 dark:focus:ring-purple-500 focus:border-transparent text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 bg-transparent transition-colors"
+                  required
+                />
+              </div>
+
+              {/* Category & Date Side by Side */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {/* Amount */}
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors">
-                    Amount
-                  </label>
-                  <input
-                    type="number"
-                    value={amount}
-                    onChange={(e) => setAmount(e.target.value)}
-                    className="w-full rounded-2xl border border-gray-300 dark:border-gray-700 px-4 py-3.5 outline-none focus:ring-2 focus:ring-purple-600 dark:focus:ring-purple-500 focus:border-transparent text-gray-900 dark:text-white bg-transparent transition-colors"
-                    required
+                {/* Category Dropdown */}
+                <div>
+                  <CategoryDropdown
+                    type={type}
+                    category={category}
+                    setCategory={setCategory}
                   />
                 </div>
 
@@ -309,25 +353,25 @@ function TransactionDetails() {
               {/* Notes */}
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors">
-                  Notes
+                  Notes (Optional)
                 </label>
                 <textarea
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
-                  rows={4}
+                  rows={3}
                   placeholder="Add a note about this transaction..."
-                  className="w-full rounded-2xl border border-gray-300 dark:border-gray-700 px-4 py-3.5 outline-none resize-none focus:ring-2 focus:ring-purple-600 dark:focus:ring-purple-500 focus:border-transparent text-gray-900 dark:text-white bg-transparent transition-colors"
+                  className="w-full rounded-2xl border border-gray-300 dark:border-gray-700 px-4 py-3.5 outline-none resize-none focus:ring-2 focus:ring-purple-600 dark:focus:ring-purple-500 focus:border-transparent text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 bg-transparent transition-colors"
                 />
               </div>
             </div>
 
             {/* Save / Cancel Buttons */}
-            <div className="border-t border-gray-200 dark:border-gray-800 pt-6 transition-colors">
+            <div className="border-t border-gray-200 dark:border-gray-800 pt-6 mt-6 transition-colors">
               <div className="flex gap-4">
                 {/* Cancel */}
                 <button
                   onClick={handleCancel}
-                  className="flex-1 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 font-semibold py-3.5 rounded-2xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                  className="flex-1 text-center border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 font-semibold py-3.5 rounded-2xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors flex items-center justify-center"
                 >
                   Cancel
                 </button>
@@ -335,7 +379,7 @@ function TransactionDetails() {
                 {/* Save */}
                 <button
                   onClick={handleSave}
-                  className="flex-1 bg-purple-700 hover:bg-purple-800 dark:bg-purple-600 dark:hover:bg-purple-700 text-white font-semibold py-3.5 rounded-2xl shadow-lg shadow-purple-500/30 transition-colors"
+                  className="flex-1 bg-purple-700 hover:bg-purple-800 dark:bg-purple-600 dark:hover:bg-purple-700 text-white font-semibold py-3.5 rounded-2xl shadow-lg shadow-purple-500/30 transition-all flex items-center justify-center"
                 >
                   Save Changes
                 </button>
