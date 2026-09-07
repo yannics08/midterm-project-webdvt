@@ -27,27 +27,28 @@ function TransactionList() {
 
   return (
     <div className="w-full max-w-3xl bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-800 transition-colors">
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <h2 className="text-xl font-bold text-gray-900 dark:text-white">
           Recent Transactions
         </h2>
 
-        <Link
-          to="/add-transaction"
-          className="flex items-center gap-2 bg-purple-700 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-purple-800 transition"
-        >
-          <Plus size={18} />
-          Add
-        </Link>
-      </div>
+        <div className="flex items-center gap-3">
+          <div className="grid grid-cols-2 gap-2 flex-1 sm:flex-initial">
+            <CategoryFilterDropdown
+              category={categoryFilter}
+              setCategory={setCategoryFilter}
+            />
+            <TypeFilterDropdown type={typeFilter} setType={setTypeFilter} />
+          </div>
 
-      <div className="grid grid-cols-2 gap-4 mb-4">
-        <CategoryFilterDropdown
-          category={categoryFilter}
-          setCategory={setCategoryFilter}
-        />
-
-        <TypeFilterDropdown type={typeFilter} setType={setTypeFilter} />
+          <Link
+            to="/add-transaction"
+            className="flex items-center gap-2 bg-purple-700 text-white px-4 py-2.5 rounded-xl text-sm font-medium hover:bg-purple-800 transition shrink-0"
+          >
+            <Plus size={18} />
+            Add
+          </Link>
+        </div>
       </div>
 
       {hasActiveFilters && (
@@ -72,7 +73,7 @@ function TransactionList() {
           ))
         ) : (
           <div className="p-4 rounded-xl bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-800 text-center text-sm text-gray-500 dark:text-gray-400 transition-colors">
-            No transactions match your filters.
+            No transactions found.
           </div>
         )}
       </div>
